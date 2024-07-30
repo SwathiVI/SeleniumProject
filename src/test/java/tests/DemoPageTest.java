@@ -7,16 +7,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 
 public class DemoPageTest {
     private WebDriver driver;
@@ -25,13 +22,8 @@ public class DemoPageTest {
 
     @Before
     public void setUp() {
-        WebDriverManager.edgedriver().setup();
-        EdgeOptions options = new EdgeOptions();
-        options.addArguments("--start-maximized");
-
-        driver = new EdgeDriver(options);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
         driver.get("https://seleniumbase.io/demo_page");
         demoPage = new DemoPage(driver);
     }
@@ -39,7 +31,7 @@ public class DemoPageTest {
     @Test
     public void testFillTextInput() {
         demoPage.fillTextInput("MAPS is boring");
-        assertEquals("MAPS is boring", demoPage.getTextInputValue());
+        assertEquals("Text input value should be 'MAPS is boring'", "MAPS is boring", demoPage.getTextInputValue());
     }
 
     @Test
@@ -47,7 +39,7 @@ public class DemoPageTest {
         String colorHex = demoPage.getSvgRectColor();
         String colorRgb = hexToRgb(colorHex);
         System.out.println("SVG Rect color (RGB): " + colorRgb);
-        assertEquals("rgb(76, 160, 160)", colorRgb);
+        assertEquals("SVG Rect color should be 'rgb(76, 160, 160)'", "rgb(76, 160, 160)", colorRgb);
     }
 
     private String hexToRgb(String hex) {
@@ -61,14 +53,14 @@ public class DemoPageTest {
     public void testToggleCheckBoxInIframe() {
         demoPage.switchToCheckboxIframe();
         demoPage.toggleIframeCheckbox();
-        assertTrue(demoPage.isIframeCheckboxSelected());
+        assertTrue("Checkbox in iframe should be selected", demoPage.isIframeCheckboxSelected());
         demoPage.switchToDefaultContent();
     }
 
     @Test
     public void testSelectDropdownAndMeter() {
         demoPage.selectDropdownOption("Set to 50%");
-        assertEquals("0.5", demoPage.getMeterValue());
+        assertEquals("Meter value should be '0.5'", "0.5", demoPage.getMeterValue());
     }
 
     @Test
